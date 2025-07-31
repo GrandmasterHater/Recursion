@@ -92,6 +92,25 @@ namespace Recursion
             
             Directory.Delete(testRootDirectory, true);
         }
+        
+        [Test]
+        public void FindAllFilesRecursiveTest()
+        {
+            string testRootDirectory = Path.Combine(Path.GetTempPath(), "FileSearchTest");
+            
+            List<string> expectedFiles = CreateTestDirectoryStructure(testRootDirectory)
+                .Select(fi => Path.Combine(fi.DirectoryName, fi.Name))
+                .OrderBy(name => name)
+                .ToList();
+
+            List<string> actualFiles = new List<string>();
+            RecursionTasks.FindAllFilesRecursive(actualFiles, new []{testRootDirectory});
+            actualFiles.OrderBy(name => name).ToList();
+            
+            Assert.That(actualFiles, Is.EquivalentTo(expectedFiles));
+            
+            Directory.Delete(testRootDirectory, true);
+        }
 
         [TestCase(2, new string[] {"()()", "(())"})]
         [TestCase(3, new string[] {"((()))", "(()())", "(())()", "()(())", "()()()"})]
