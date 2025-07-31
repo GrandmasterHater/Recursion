@@ -177,30 +177,26 @@ namespace Recursion
             List<FileInfo> foundFiles = new List<FileInfo>();
             DirectoryInfo directoryInfo = new DirectoryInfo(path);
 
-            FindAllFilesRecursive(directoryInfo, foundFiles);
+            FindAllFilesRecursive(new DirectoryInfo[] {directoryInfo}, 0, foundFiles);
 
             return foundFiles;
         }
         
-        private static void FindAllFilesRecursive(DirectoryInfo directoryInfo, List<FileInfo> foundFiles)
+        private static void FindAllFilesRecursive(DirectoryInfo[] directoryInfos, int index, List<FileInfo> foundFiles)
         {
+            if (index >= directoryInfos.Length)
+                return;
+
+            DirectoryInfo directoryInfo = directoryInfos[index];
+            
             foundFiles.AddRange(directoryInfo.GetFiles());
 
             DirectoryInfo[] subDirectories = directoryInfo.GetDirectories();
             
-            if (subDirectories.Length == 0)
-                return;
+            if (subDirectories.Length > 0)
+                FindAllFilesRecursive(subDirectories, 0, foundFiles);;
             
-            FindFromDirectoriesRecursive(subDirectories, 0, foundFiles);
-        }
-
-        private static void FindFromDirectoriesRecursive(DirectoryInfo[] directoryInfo, int index, List<FileInfo> foundFiles)
-        {
-            if (index >= directoryInfo.Length)
-                return;
-            
-            FindAllFilesRecursive(directoryInfo[index], foundFiles);
-            FindFromDirectoriesRecursive(directoryInfo, ++index, foundFiles);
+            FindAllFilesRecursive(directoryInfos, index + 1, foundFiles);
         }
         
         //Генерация всех корректных сбалансированных комбинаций круглых скобок (параметр -- количество открывающих скобок).
