@@ -103,9 +103,9 @@ namespace Recursion
                 .OrderBy(name => name)
                 .ToList();
 
-            List<string> actualFiles = new List<string>();
-            RecursionTasks.FindAllFilesRecursive(new []{testRootDirectory}, 0, actualFiles);
-            actualFiles.OrderBy(name => name).ToList();
+            List<string> actualFiles = RecursionTasks.FindAllFilesRecursive(testRootDirectory)
+                .OrderBy(name => name)
+                .ToList();
             
             Assert.That(actualFiles, Is.EquivalentTo(expectedFiles));
             

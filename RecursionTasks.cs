@@ -200,21 +200,18 @@ namespace Recursion
         }
         
         //8. поиск всех файлов в заданном каталоге, включая файлы, расположенные в подкаталогах произвольной вложенности.
-        public static void FindAllFilesRecursive(string[] path, int index, List<string> foundFiles)
+        public static List<string> FindAllFilesRecursive(string path)
         {
-            if (index >= path.Length)
-                return;
-            
-            string directoryPath = path[index];
-            
-            foundFiles.AddRange(Directory.GetFiles(directoryPath));
+            List<string> files = Directory.GetFiles(path).ToList();
+            string[] subDirectories = Directory.GetDirectories(path);
 
-            string[] subDirectories = Directory.GetDirectories(directoryPath);
-            
-            if (subDirectories.Length > 0)
-                FindAllFilesRecursive(subDirectories, 0, foundFiles);
-            
-            FindAllFilesRecursive(path, index + 1, foundFiles);
+            foreach (var subDirectory in subDirectories)
+            {
+                List<string> subdirectoryFiles = FindAllFilesRecursive(subDirectory);
+                files.AddRange(subdirectoryFiles);
+            }
+
+            return files;
         }
         
         //Генерация всех корректных сбалансированных комбинаций круглых скобок (параметр -- количество открывающих скобок).
